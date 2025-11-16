@@ -176,3 +176,6 @@ D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\bin\Debug\net8.0\Applicat
 D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\bin\Debug\net8.0\Infrastructure.pdb
 D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\bin\Debug\net8.0\Domain.pdb
 D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\bin\Debug\net8.0\AutoMapper.dll
+D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\ESTUDOS .NET\Projetos\api-biblioteca\api-biblioteca\obj\Debug\net8.0\api-biblioteca.sourcelink.json

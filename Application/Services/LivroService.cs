@@ -1,5 +1,7 @@
-﻿using Application.DTOs.Livro;
+﻿using api_biblioteca.Middleware;
+using Application.DTOs.Livro;
 using Application.IServices;
+using AutoMapper;
 using Domain.Entidades;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -15,14 +17,16 @@ namespace Application.Services
     public class LivroService : ILivroService
     {
         private readonly ILivroRepository _livroRepository;
+        private readonly IMapper _mapper;
         private readonly BibliotecaDbContext _context;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        public LivroService(ILivroRepository livroRepository, BibliotecaDbContext context, IEmprestimoRepository emprestimoRepository)
+        public LivroService(ILivroRepository livroRepository, BibliotecaDbContext context, IEmprestimoRepository emprestimoRepository, IMapper mapper)
         {
             _livroRepository = livroRepository;
             _context = context;
             _emprestimoRepository = emprestimoRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Livro>> GetAllAsync()
@@ -40,18 +44,13 @@ namespace Application.Services
             if (string.IsNullOrWhiteSpace(livroDto.Titulo))
                 throw new ArgumentException("Título é obrigatório.");
 
-            // Mapeamento: DTO -> Entidade
-            var novoLivro = new Livro
-            {
-                Titulo = livroDto.Titulo
-                // A lista de Autores começa vazia
-            };
+            var novoLivro = _mapper.Map<Livro>(livroDto);
 
             // Lógica N:N: Buscar os autores e associar
             if (livroDto.AutorIds != null && livroDto.AutorIds.Any())
             {
                 // Busca no banco os autores que existem com os IDs da lista
-                var autores = await _context.Autores // (Ou _autorRepo.GetByIdsAsync(ids))
+                var autores = await _context.Autores
                     .Where(a => livroDto.AutorIds.Contains(a.Id))
                     .ToListAsync();
 
@@ -68,7 +67,7 @@ namespace Application.Services
 
             if (emprestimosAtivos.Result.Any())
             {
-                throw new Exception("Não é possível deletar o livro, existem empréstimos ativos associados a ele.");
+                throw new BusinessRuleException("Não é possível deletar o livro, existem empréstimos ativos associados a ele.");
             }
 
             await _livroRepository.DeleteAsync(id);

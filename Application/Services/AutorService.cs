@@ -1,6 +1,8 @@
-﻿using Application.DTOs.Autor;
+﻿using api_biblioteca.Middleware;
+using Application.DTOs.Autor;
 using Application.DTOs.Usuario;
 using Application.IServices;
+using AutoMapper;
 using Domain.Entidades;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -15,12 +17,14 @@ namespace Application.Services
     public class AutorService : IAutorService
     {
         private readonly IAutorRepository _autorRepository;
+        private readonly IMapper _mapper;
         private readonly BibliotecaDbContext _context; // Prática errada, refatorar depois com IUnitOfWork
 
-        public AutorService(IAutorRepository autorRepository, BibliotecaDbContext context)
+        public AutorService(IAutorRepository autorRepository, BibliotecaDbContext context, IMapper mapper)
         {
             _autorRepository = autorRepository;
             _context = context;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<Autor>> GetAllAsync()
         {
@@ -36,10 +40,8 @@ namespace Application.Services
             if (string.IsNullOrWhiteSpace(autorDto.Nome))
                 throw new ArgumentException("Nome é obrigatório.");
 
-            var novoAutor = new Autor
-            {
-                Nome = autorDto.Nome
-            };
+            // Utilizando AutoMapper para mapear DTO para Entidade
+            var novoAutor = _mapper.Map<Autor>(autorDto);
 
             await _autorRepository.AddAsync(novoAutor);
             await _context.SaveChangesAsync();
@@ -51,7 +53,7 @@ namespace Application.Services
 
             if (autor.Livros.Any())
             {
-                throw new Exception("Não é possível excluir autor. Exclua os livros dele primeiro.");
+                throw new BusinessRuleException("Não é possível excluir autor. Exclua os livros dele primeiro.");
             }
 
             await _autorRepository.DeleteAsync(id);
@@ -66,8 +68,7 @@ namespace Application.Services
             // Busca a entidade para atualizar (sem AsNoTracking!)
             var autorParaAtualizar = await _autorRepository.GetByIdParaAtualizacaoAsync(autorDto.Id);
 
-            // Mapeamento: DTO -> Entidade
-            autorParaAtualizar.Nome = autorDto.Nome;
+            _mapper.Map(autorDto, autorParaAtualizar);
 
             await _autorRepository.UpdateAsync(autorParaAtualizar);
             await _context.SaveChangesAsync();

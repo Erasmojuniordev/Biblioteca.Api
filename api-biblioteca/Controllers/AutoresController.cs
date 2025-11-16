@@ -38,48 +38,22 @@ namespace api_biblioteca.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateAutorDto novoAutor)
         {
-            try
-            {
-                await _autorService.AddAsync(novoAutor);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // Retorna 400 Bad Request se a regra de negócio falhar
-                return BadRequest(ex.Message);
-            }
+            await _autorService.AddAsync(novoAutor);
+            return Ok(novoAutor);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAutorDto autorAtualizado)
         {
-            if (id != autorAtualizado.Id)
-            {
-                return BadRequest("ID do autor não corresponde ao ID na URL.");
-            }
-            try
-            {
                 await _autorService.UpdateAsync(autorAtualizado);
-                return NoContent(); // 204 No Content
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+                return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
                 await _autorService.DeleteAsync(id);
-                return NoContent(); // 204 No Content
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+                return NoContent();
         }
     }
 }

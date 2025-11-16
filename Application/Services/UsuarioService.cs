@@ -1,5 +1,7 @@
-﻿using Application.DTOs.Usuario;
+﻿using api_biblioteca.Middleware;
+using Application.DTOs.Usuario;
 using Application.IServices;
+using AutoMapper;
 using Domain.Entidades;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -15,14 +17,16 @@ namespace Application.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMapper _mapper;
         private readonly BibliotecaDbContext _context;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository, BibliotecaDbContext context, IEmprestimoRepository emprestimoRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, BibliotecaDbContext context, IEmprestimoRepository emprestimoRepository, IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
             _context = context;
             _emprestimoRepository = emprestimoRepository;
+            _mapper = mapper;
         }
         public Task<IEnumerable<Usuario>> GetAllAsync()
         {
@@ -39,10 +43,7 @@ namespace Application.Services
             if (string.IsNullOrWhiteSpace(usuarioDto.Nome))
                 throw new ArgumentException("Nome é obrigatório.");
 
-            var novoUsuario = new Usuario
-            {
-                Nome = usuarioDto.Nome
-            };
+            var novoUsuario = _mapper.Map<Usuario>(usuarioDto);
 
             await _usuarioRepository.AddAsync(novoUsuario);
             await _context.SaveChangesAsync();
@@ -54,7 +55,7 @@ namespace Application.Services
 
             if (emprestimosAtivos.Result.Any())
             {
-                throw new InvalidOperationException("O usuário possui empréstimos ativos e não pode ser excluído.");
+                throw new BusinessRuleException("O usuário possui empréstimos ativos e não pode ser excluído.");
             }
 
             await _usuarioRepository.DeleteAsync(id);
@@ -72,10 +73,7 @@ namespace Application.Services
 
             // 3. Mapeamento (Atualiza o objeto que está "vigiado")
             usuarioParaAtualizar.Nome = usuarioDto.Nome;
-
-            // 4. Salvar
-            // (Não precisamos chamar _usuarioRepo.UpdateAsync() porque
-            // o DbContext já "viu" a mudança em usuarioParaAtualizar.Nome)
+            
             await _context.SaveChangesAsync();
         }
     }

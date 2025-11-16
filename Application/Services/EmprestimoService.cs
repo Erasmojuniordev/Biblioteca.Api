@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Emprestimo;
+﻿using api_biblioteca.Middleware;
+using Application.DTOs.Emprestimo;
 using Application.IServices;
 using Domain.Entidades;
 using Domain.Interfaces;
@@ -45,7 +46,7 @@ namespace Application.Services
 
             if (temAtraso)
             {
-                throw new Exception("Usuário bloqueado. Existem empréstimos atrasados.");
+                throw new BusinessRuleException("Usuário bloqueado. Existem empréstimos atrasados.");
             }
 
             // Regra 2: O livro está disponível?
@@ -53,7 +54,7 @@ namespace Application.Services
 
             if (emprestimosAtivosLivro.Any())
             {
-                throw new Exception("O livro não está disponível. Já está emprestado.");
+                throw new BusinessRuleException("O livro não está disponível. Já está emprestado.");
             }
 
             var novoEmprestimo = new Emprestimo
@@ -83,7 +84,7 @@ namespace Application.Services
             // Regra 1: Já foi devolvido?
             if (emprestimo.Ativo == false)
             {
-                throw new Exception("Este livro já foi devolvido.");
+                throw new BusinessRuleException("Este livro já foi devolvido.");
             }
 
             emprestimo.Ativo = false;

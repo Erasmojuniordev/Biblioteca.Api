@@ -37,34 +37,22 @@ namespace api_biblioteca.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateEmprestimoDto emprestimo)
         {
-            try
-            {
-                await _emprestimoService.AddAsync(emprestimo);
-                return Ok();
-            }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            await _emprestimoService.AddAsync(emprestimo);
+            return Ok();
         }
 
         [HttpPut("{id}/devolver")]
         public async Task<IActionResult> DevolverLivro(int id)
         {
-            try
-            {
-                await _emprestimoService.DevolverLivroAsync(id);
-                return Ok();
-            }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            await _emprestimoService.DevolverLivroAsync(id);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _emprestimoService.DeleteAsync(id);
-                return Ok();
-            }
-            catch (Exception ex) { return BadRequest(ex.Message); }
+            await _emprestimoService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

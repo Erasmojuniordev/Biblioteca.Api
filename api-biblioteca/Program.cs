@@ -1,4 +1,6 @@
+using api_biblioteca.Middleware;
 using Application.IServices;
+using Application.Mappings;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Context;
@@ -13,7 +15,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 // Registrando o DbContext com a connection string
 builder.Services.AddDbContext<BibliotecaDbContext>(options =>
-    options.UseSqlite(connectionString) // Usando SQLite!
+    options.UseSqlite(connectionString)
 );
 
 // Repositorios
@@ -36,6 +38,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
+// Escaneia as classes que herdam de Profile para configurar o AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 // (Serviços que o ASP.NET Core precisa)
 builder.Services.AddControllers();
@@ -50,6 +55,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+// Global Exception Handler Middleware
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
