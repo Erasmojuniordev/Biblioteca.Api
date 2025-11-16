@@ -36,43 +36,22 @@ namespace api_biblioteca.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUsuarioDto novoUsuario)
         {
-            try
-            {
-                await _usuarioService.AddAsync(novoUsuario);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _usuarioService.AddAsync(novoUsuario);
+            return Ok();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUsuarioDto usuarioAtualizado)
         {
-            try
-            {
-                await _usuarioService.UpdateAsync(usuarioAtualizado);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _usuarioService.UpdateAsync(usuarioAtualizado);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _usuarioService.DeleteAsync(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _usuarioService.DeleteAsync(id);
+            return Ok();
         }
     }
 }

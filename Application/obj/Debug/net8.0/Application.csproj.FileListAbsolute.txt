@@ -17,3 +17,4 @@ D:\ESTUDOS .NET\Projetos\api-biblioteca\Application\obj\Debug\net8.0\refint\Appl
 D:\ESTUDOS .NET\Projetos\api-biblioteca\Application\obj\Debug\net8.0\Application.pdb
 D:\ESTUDOS .NET\Projetos\api-biblioteca\Application\obj\Debug\net8.0\Application.genruntimeconfig.cache
 D:\ESTUDOS .NET\Projetos\api-biblioteca\Application\obj\Debug\net8.0\ref\Application.dll
+D:\ESTUDOS .NET\Projetos\api-biblioteca\Application\obj\Debug\net8.0\Application.sourcelink.json
