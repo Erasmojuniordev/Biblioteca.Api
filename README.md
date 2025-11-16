@@ -56,7 +56,7 @@ dotnet ef database update
 ## ⚙ Como Rodar Localmente
 ### 1️⃣ Clonar o repositório
 ```bash
-git clone https://github.com/seu-usuario/Biblioteca.Api.git
+git clone https://github.com/erasmojuniordev/Biblioteca.Api.git
 ```
 ### 2️⃣ Entrar na pasta do projeto
 ```bash
